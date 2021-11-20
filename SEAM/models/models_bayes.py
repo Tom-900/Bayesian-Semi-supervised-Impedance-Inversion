@@ -8,10 +8,8 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from torch.autograd import Variable
 
-inverse_net = torch.load("D:/statistics/Geostatistics/Github/Semi-supervised Impedance Inversion by Bayesian Neural Network Based on 2-d CNN Pre-training"
-                         "/SEAM/checkpoints/Nov20_142012_inverse")
-forward_net = torch.load("D:/statistics/Geostatistics/Github/Semi-supervised Impedance Inversion by Bayesian Neural Network Based on 2-d CNN Pre-training"
-                         "/SEAM/checkpoints/Nov20_142012_forward")
+inverse_net = torch.load(".../SEAM/checkpoints/Nov20_142012_inverse")
+forward_net = torch.load(".../SEAM/checkpoints/Nov20_142012_forward")
 
 class inverse_bbb(nn.Module):
     def __init__(self, prior_var=10, noise_ratio=0.1):
@@ -45,6 +43,7 @@ class inverse_bbb(nn.Module):
         return var_weight, var_bias, kl_weight, kl_bias
 
     def forward(self, x, x_expand):
+      
         # update nn.sequential cnn1
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn1_weight, self.rho_cnn1_bias, inverse_net.cnn1.weight, inverse_net.cnn1.bias)
 
