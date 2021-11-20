@@ -5,4 +5,4 @@ There are three folders in the project. In "core" part, there are some basic fun
 
 In "Marmousi2" part, the Bayesian neural network for Marmousi2 is built as is described in the manuscript. In "SEAM" part, the same is done for SEAM model. 
 
-This project references the work of Alfarraj and AlRejib: 
+This project references the work of Alfarraj and AlRejib: https://github.com/motazalfarraj/Semi-supervised-Learning-for-Acoustic-Impedance-Inversion.
