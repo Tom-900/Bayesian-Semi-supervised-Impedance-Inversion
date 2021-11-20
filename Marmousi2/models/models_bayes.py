@@ -8,10 +8,8 @@ from scipy.stats import norm
 import matplotlib.pyplot as plt
 from torch.autograd import Variable
 
-inverse_net = torch.load("D:/statistics/Geostatistics/Github/Semi-supervised Impedance Inversion by Bayesian Neural Network Based on 2-d CNN Pre-training"
-                         "/Marmousi2/checkpoints/Nov19_205735_inverse")
-forward_net = torch.load("D:/statistics/Geostatistics/Github/Semi-supervised Impedance Inversion by Bayesian Neural Network Based on 2-d CNN Pre-training"
-                         "/Marmousi2/checkpoints/Nov19_205735_forward")
+inverse_net = torch.load(".../Marmousi2/checkpoints/Nov19_205735_inverse")
+forward_net = torch.load(".../Marmousi2/checkpoints/Nov19_205735_forward")
 
 class inverse_bbb(nn.Module):
     def __init__(self, prior_var=10, noise_ratio=0.1):
@@ -78,7 +76,6 @@ class inverse_bbb(nn.Module):
         cnn_out1 = cnn_out1 + epsilon * var.sqrt()
 
          # update Sequential cnn2
-
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn2_weight, self.rho_cnn2_bias, inverse_net.cnn2.weight, inverse_net.cnn2.bias)
 
         self.rho_cnn2_weight_kl = kl_weight
@@ -110,7 +107,6 @@ class inverse_bbb(nn.Module):
         cnn_out2 = cnn_out2 + epsilon * var.sqrt()
 
          # update Sequential cnn3
-
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn3_weight, self.rho_cnn3_bias, inverse_net.cnn3.weight, inverse_net.cnn3.bias)
 
         self.rho_cnn3_weight_kl = kl_weight
@@ -144,7 +140,6 @@ class inverse_bbb(nn.Module):
         cnn_out = torch.cat((cnn_out1, cnn_out2, cnn_out3), dim=1)
 
          # update cnn4 and groupnorm
-
         cnn_out = inverse_net.activation(cnn_out)
 
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn4_weight, self.rho_cnn4_bias, inverse_net.cnn4.weight, inverse_net.cnn4.bias)
@@ -167,7 +162,6 @@ class inverse_bbb(nn.Module):
         cnn_out = cnn_out + epsilon * var.sqrt()
 
          # Update cnn5 and groupnorm
-
         cnn_out = inverse_net.activation(cnn_out)
 
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn5_weight, self.rho_cnn5_bias, inverse_net.cnn5.weight, inverse_net.cnn5.bias)
@@ -190,7 +184,6 @@ class inverse_bbb(nn.Module):
         cnn_out = cnn_out + epsilon * var.sqrt()
 
         # Update cnn6 and groupnorm
-
         cnn_out = inverse_net.activation(cnn_out)
 
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnn6_weight, self.rho_cnn6_bias, inverse_net.cnn6.weight, inverse_net.cnn6.bias)
@@ -215,8 +208,7 @@ class inverse_bbb(nn.Module):
         cnn_out = inverse_net.activation(cnn_out)
         cnn_out = cnn_out.squeeze(dim=2)
 
-         # Update gru
-
+        # Update gru
         tmp_x = x.transpose(-1, -2)
 
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_gru_weight, self.rho_gru_bias, torch.zeros(1).cuda(), torch.zeros(1).cuda())
@@ -234,8 +226,7 @@ class inverse_bbb(nn.Module):
 
         x = rnn_out + cnn_out
 
-         # Update upsamping
-
+        # Update upsamping
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_cnnt1_weight, self.rho_cnnt1_bias, inverse_net.cnnt1.weight, inverse_net.cnnt1.bias)
 
         self.rho_cnnt1_weight_kl = kl_weight
@@ -279,7 +270,6 @@ class inverse_bbb(nn.Module):
         x = inverse_net.activation(x)
 
         # update gru_out
-
         tmp_x = x.transpose(-1, -2)
 
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_gru_out_weight, self.rho_gru_bias, torch.zeros(1).cuda(), torch.zeros(1).cuda())
@@ -293,7 +283,6 @@ class inverse_bbb(nn.Module):
         x = x + epsilon * var.sqrt()
 
         # update out
-
         var_weight, var_bias, kl_weight, kl_bias = self.linear_var(self.rho_out_weight, self.rho_out_bias, inverse_net.out.weight, inverse_net.out.bias)
         self.rho_out_weight_kl = kl_weight
         self.rho_out_bias_kl = kl_bias
